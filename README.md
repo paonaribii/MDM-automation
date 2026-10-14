@@ -89,6 +89,7 @@ qa_automation/
   cmc_summary.py        ทางสำรองจากบันทึกคำขออนุมัติพิเศษ
   rules.py              กฎการตรวจว่าข้อมูลตรงกันทุกระบบ
   sheet_writer.py       เขียนผลลง Google Sheets และไฟล์ Excel ในเครื่อง
+  sheet_reader.py       อ่านชีทต้นทางผ่าน service account (ชีทตั้งเป็น "จำกัด" ได้)
   models.py, config.py  โครงสร้างข้อมูล / อ่านค่าตั้งค่าจาก .env
 ```
 
@@ -116,7 +117,10 @@ copy .env.example .env      # กรอก URL ของแต่ละระบ
 2. สร้าง **Service Account** (บัญชีสำหรับโปรแกรม) แล้วสร้าง key แบบ JSON
 3. เก็บไฟล์ไว้ที่ `credentials/service_account.json` (ไฟล์นี้ไม่ถูกอัปขึ้น git) แล้วตั้งค่าใน `.env`:
    `GOOGLE_SERVICE_ACCOUNT_FILE=./credentials/service_account.json`
-4. แชร์ชีทปลายทางให้ email ของ service account (`xxx@your-project.iam.gserviceaccount.com`) เป็นผู้แก้ไข
+4. แชร์ชีทให้ email ของ service account (`xxx@your-project.iam.gserviceaccount.com`):
+   ชีทที่บันทึกผลให้เป็น **ผู้แก้ไข** ส่วนชีท MDM Branch และ CMC Summary ที่อ่านอย่างเดียวให้เป็น **ผู้มีสิทธิ์อ่าน**
+5. ชีททุกอันตั้ง "การเข้าถึงทั่วไป" เป็น **จำกัด** ได้เลย เพราะโปรแกรมอ่าน/เขียนผ่าน service account
+   ไม่ต้องเปิดแบบ "ทุกคนที่มีลิงก์"
 
 </details>
 

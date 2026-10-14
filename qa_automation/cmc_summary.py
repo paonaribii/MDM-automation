@@ -11,9 +11,7 @@ Tab: "เคสที่ไม่มีเครื่องลงโปรแ�
 """
 from __future__ import annotations
 
-import csv
-import io
-import urllib.request
+from qa_automation.sheet_reader import read_tab_rows
 
 _GID = "2035186734"
 _COL_LOAN = 6
@@ -22,17 +20,12 @@ _COL_CASE_ID = 11
 
 def read_cmc_summary_sheet(sheet_url: str, gid: str = _GID) -> dict[str, str]:
     """อ่าน CMC Summary sheet คืน dict {เลขที่ใบคำขอ: MDM Case ID}."""
-    base = sheet_url.split("/edit")[0]
-    csv_url = f"{base}/export?format=csv&gid={gid}"
     try:
-        req = urllib.request.Request(csv_url, headers={"User-Agent": "Mozilla/5.0"})
-        with urllib.request.urlopen(req, timeout=20) as resp:
-            content = resp.read().decode("utf-8-sig", errors="replace")
+        rows = read_tab_rows(sheet_url, gid)
     except Exception as e:
         print(f"[CMC Summary] Cannot read sheet: {e}")
         return {}
 
-    rows = list(csv.reader(io.StringIO(content)))
     result: dict[str, str] = {}
     for row in rows[1:]:
         if len(row) <= max(_COL_LOAN, _COL_CASE_ID):

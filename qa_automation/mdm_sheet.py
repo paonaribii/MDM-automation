@@ -7,10 +7,9 @@ Sheet structure (MDM_SHEET_URL ใน .env, tab "เช็คเครื่อ�
 """
 from __future__ import annotations
 
-import csv
-import io
 import re
-import urllib.request
+
+from qa_automation.sheet_reader import read_tab_rows
 
 
 # Column indices (0-based) — based on sheet structure
@@ -40,15 +39,10 @@ def read_mdm_branch_sheet(sheet_url: str, gid: str = _MDM_BRANCH_SHEET_GID) -> l
         'all_ids': list[str], # รวมทุก device ID ในสาขา
       }
     """
-    csv_url = sheet_url.split("/edit")[0] + f"/export?format=csv&gid={gid}"
     try:
-        with urllib.request.urlopen(csv_url, timeout=15) as resp:
-            content = resp.read().decode("utf-8")
+        rows = read_tab_rows(sheet_url, gid)
     except Exception as e:
         raise RuntimeError(f"Cannot read MDM Sheet: {e}") from e
-
-    reader = csv.reader(io.StringIO(content))
-    rows = list(reader)
 
     if len(rows) < 2:
         return []

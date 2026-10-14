@@ -1,0 +1,11 @@
+.env
+state/
+output/
+tmp/
+__pycache__/
+*.py[cod]
+.venv/
+*.log
+credentials/
+credentials.json
+service_account*.json
